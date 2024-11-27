@@ -53,8 +53,8 @@ public class Program {
         for (int i = 0; i < data.totalSeasons(); i++) {
             List<EpisodesData> episodesData = seasons.get(i).episodes();
             // para coletar os titulos dos episodios
-            for (int j = 0; j < episodesData.size(); j++) {
-                System.out.println(episodesData.get(j).title());
+            for (EpisodesData episodesDatum : episodesData) {
+                System.out.println(episodesDatum.title());
             }
         }
     }

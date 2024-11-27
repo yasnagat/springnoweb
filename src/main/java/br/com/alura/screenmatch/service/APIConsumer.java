@@ -27,15 +27,13 @@ public class APIConsumer {
         // tratamento das excecoes que podem acontecer durante a execucao
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+
         // corpo da resposta
         // String json = response.body();
         // return json;
-
         return response.body();
     }
 }

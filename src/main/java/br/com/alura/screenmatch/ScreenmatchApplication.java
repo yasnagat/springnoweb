@@ -5,9 +5,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @SpringBootApplication
 // classe de aplicacao de linha de comando
 public class ScreenmatchApplication implements CommandLineRunner {
@@ -17,7 +14,7 @@ public class ScreenmatchApplication implements CommandLineRunner {
 	}
 
 	@Override
-	public void run(String... args) throws Exception {
+	public void run(String... args) {
 		Program program = new Program();
 		program.menuExibit();
 
