@@ -1,5 +1,6 @@
 package br.com.alura.screenmatch.principal;
 
+import br.com.alura.screenmatch.model.Episode;
 import br.com.alura.screenmatch.model.EpisodesData;
 import br.com.alura.screenmatch.model.SeriesData;
 import br.com.alura.screenmatch.service.APIConsumer;
@@ -56,6 +57,11 @@ public class Program {
                                 .limit(5)
                                         .forEach(System.out::println);
 
-        // episodesData.add(new EpisodesData("teste", 3, "10", "20-01-01"));
+        // para lidar com cada episodio isoladamente, como elemento separado da lista total da temporada
+        List<Episode> episodes = seasons.stream()
+                .flatMap(e -> e.episodes().stream())
+                .map(d -> new Episode(d.number(), d)
+                ).collect(Collectors.toList());
+        episodes.forEach(System.out::println);
     }
 }
