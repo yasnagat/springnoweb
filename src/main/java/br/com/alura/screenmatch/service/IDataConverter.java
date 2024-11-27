@@ -8,6 +8,6 @@ public interface IDataConverter {
     // com isso, vamos ter um conversor generico capaz de absorver qualquer tipo de dado que for
     // inserido
     <T> T dataObtainer(String json, Class<T> classe);
-    //Ele receberá um json, que é uma string, uma classe e no conversor de dados
-    // tentaremos transformá-lo na classe que foi indicada.
+    // Ele receberá um json, que é uma string e uma classe
+    // no conversor de dados tentaremos transformá-lo na classe que foi indicada.
 }
