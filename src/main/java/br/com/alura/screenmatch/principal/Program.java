@@ -7,44 +7,55 @@ import br.com.alura.screenmatch.service.DataConverter;
 import br.com.alura.screenmatch.model.SeasonsData;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
-// classe que vai ser responsável por implementar o menu de interação com o usuário
 public class Program {
     private Scanner read = new Scanner(System.in);
-    // instancia o objeto da classe de conversão dos dados JSON para POJO
     private DataConverter conversor = new DataConverter();
-
-    // instancia o objeto da classe de consultas à API
     private APIConsumer APIConsumer = new APIConsumer();
 
-    // classe do tipo final porque vão ser fixas
     private final String ADDRESS = "https://www.omdbapi.com/?t=";
     private final String API_KEY = "&apikey=6585022c";
 
-    // metodo que implementa o menu de interacao
     public void menuExibit() {
         System.out.print("Insira o nome da série que você quer buscar: ");
         var serieName = read.nextLine();
 
-        // pega os dados JSON a partir da URL criada com o uso das variaveis finals
         var json = APIConsumer.dataObtainer(ADDRESS + serieName.replace(" ", "+") + API_KEY);
-
-        // desacomplando as classes e trazendo operacoes do metodo run para o program
-        // usa a classe do tipo record, que contem a correspondencia dos dados sobre a serie
         SeriesData data = conversor.dataObtainer(json, SeriesData.class);
         System.out.println(data);
 
         List<SeasonsData> seasons = new ArrayList<>();
-        // loop para mostrar os dados de todas as temporadas da serie
         for(int i = 1; i<=data.totalSeasons(); i++) {
-            json = APIConsumer.dataObtainer(ADDRESS + serieName.replace(" ", "+") +"&season=" + i + API_KEY);
+            json = APIConsumer.dataObtainer(ADDRESS +
+                    serieName.replace(" ", "+") +
+                    "&season=" +
+                    i +
+                    API_KEY);
             SeasonsData seasonsData = conversor.dataObtainer(json, SeasonsData.class);
             seasons.add(seasonsData);
         }
-        seasons.forEach(System.out::println);
-        // enxugando o codigo usando lambda
+        // seasons.forEach(System.out::println);
         seasons.forEach(t -> t.episodes().forEach(e -> System.out.println(e.title())));
+
+        // unificar as listas com os dados de cada temporada em uma só lista usando o stream
+        List<EpisodesData> episodesData = seasons.stream()
+                // metodo para concatenar cada elemento da lista em uma lista unica
+                .flatMap(e -> e.episodes().stream())
+                // collect é responsavel por adicionar ou remover itens da lista
+                // se usassemos o toList direto, a List se tornaria imutavel
+                .collect(Collectors.toList());
+
+        // para ordenar e limitar o top 5, implementando o parametro da busca
+        episodesData.stream()
+                .filter(e -> !e.rating().equalsIgnoreCase("N/A"))
+                        .sorted(Comparator.comparing(EpisodesData::rating).reversed())
+                                .limit(5)
+                                        .forEach(System.out::println);
+
+        // episodesData.add(new EpisodesData("teste", 3, "10", "20-01-01"));
     }
 }
