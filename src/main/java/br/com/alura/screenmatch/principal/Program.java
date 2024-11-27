@@ -37,25 +37,14 @@ public class Program {
         System.out.println(data);
 
         List<SeasonsData> seasons = new ArrayList<>();
-
         // loop para mostrar os dados de todas as temporadas da serie
         for(int i = 1; i<=data.totalSeasons(); i++) {
             json = APIConsumer.dataObtainer(ADDRESS + serieName.replace(" ", "+") +"&season=" + i + API_KEY);
             SeasonsData seasonsData = conversor.dataObtainer(json, SeasonsData.class);
             seasons.add(seasonsData);
         }
-        // substitui um loop para exibir todos os elementos da ArrayList que preenchemos com os dados POJO (ex-JSON) depois de consumir a API
         seasons.forEach(System.out::println);
-
-        // loop para exibir os dados de cada episodio por temporada. antes só tinhamos os dados por temporada condensados
-        // agora, vamos acrescentar um loop, como se fosse uma matriz, para percorrer episodio por episodio de cada temporada
-        // colecao (episodios) de colecao (temporada)
-        for (int i = 0; i < data.totalSeasons(); i++) {
-            List<EpisodesData> episodesData = seasons.get(i).episodes();
-            // para coletar os titulos dos episodios
-            for (EpisodesData episodesDatum : episodesData) {
-                System.out.println(episodesDatum.title());
-            }
-        }
+        // enxugando o codigo usando lambda
+        seasons.forEach(t -> t.episodes().forEach(e -> System.out.println(e.title())));
     }
 }
