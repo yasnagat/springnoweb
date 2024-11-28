@@ -7,6 +7,9 @@ import br.com.alura.screenmatch.service.APIConsumer;
 import br.com.alura.screenmatch.service.DataConverter;
 import br.com.alura.screenmatch.model.SeasonsData;
 
+import java.io.DataInput;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -63,5 +66,26 @@ public class Program {
                 .map(d -> new Episode(d.number(), d)
                 ).collect(Collectors.toList());
         episodes.forEach(System.out::println);
+
+        // cria um novo input para o usuario filtrar os episodios a partir da data de lançamento
+        System.out.println("A partir de que ano você deseja ver os episódios? ");
+        var ano = read.nextInt();
+        //depois de um nextInt devemos colocar o nextLine para absorver o enter clicado
+        read.nextLine();
+
+        // define a variavel de busca do ano
+        LocalDate date = LocalDate.of(ano, 1, 1);
+
+        // formata a data para ser exibida no padrao usado no brasil
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        episodes.stream()
+                .filter(e -> e.getLaunchDate() != null && e.getLaunchDate().isAfter(date))
+                .forEach(e -> System.out.println(
+                        "Season: " + e.getSeasonNumber()
+                        + " Episode's name: " + e.getTitle()
+                        + " Launch date: " + e.getLaunchDate())
+                );
+
     }
 }

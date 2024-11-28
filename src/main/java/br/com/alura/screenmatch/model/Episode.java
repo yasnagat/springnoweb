@@ -83,4 +83,6 @@ public class Episode {
                 ", Avaliação = " + rating +
                 ", Data Lançamento = " + launchDate;
     }
+
+
 }
